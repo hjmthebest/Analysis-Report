@@ -7,7 +7,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 import pyspark
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, Row
+from pyspark import SQLContext, SparkContext, SparkConf
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
@@ -20,8 +21,12 @@ import os
 import datetime, timeit, time
 
 spark = SparkSession.builder \
-                    .master('yarn') \
-                    .appName('report') \ 
+                    .master("yarn") \
+                    .appName("SparkAnalysis") \
+                    .config("spark.sql.execution.arrow.enable","true") \
+                    .config("spark.sql.crossJoin.enabled","true") \
+	                  .config("spark.executor.heartbeatInterval", "300s") \
+                    .enableHiveSupport() \
                     .getOrCreate()
 
 start = time.time()
