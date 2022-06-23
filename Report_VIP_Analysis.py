@@ -19,6 +19,11 @@ import sys
 import os
 import datetime, timeit, time
 
+spark = SparkSession.builder \
+                    .master('yarn') \
+                    .appName('report') \ 
+                    .getOrCreate()
+
 start = time.time()
 
 def excll_cust_report():
@@ -56,7 +61,7 @@ def excll_cust_report():
                 and substring(a.excll_cust_grde_smcls_cd, 1, 4) in ('1111', '1112', '1113', '1119', '1221', '1222', '1223', '1224', '1551', '1552')
                 and a.excll_cust_self_cl_cd = '1'
         ), purchase_amount as (
-            -- 구매고객수 / 평균 객단가
+                 -- 구매고객수 / 평균 객단가
             select a.dpstr_cust_no
                  -- 구매금액
                  , ifnull(sum(case when a.std_ym between date_format(add_months(current_date(), -13), 'yyyyMM') and date_format(add_months(current_date(),  -1), 'yyyyMM') then a.gs_slng_amt end), 0) as pch_amt_crnt_yr
@@ -74,7 +79,7 @@ def excll_cust_report():
                 and a.on_off_cl_cd = '1'
             group by 1
         ), purchase_cycle as (
-            -- 구매주기
+                 -- 구매주기
             select s.dpstr_cust_no
                  , ifnull(round(case when s.cnt_dys_crnt_yr <= 2 then null else (s.diff_crnt_yr / (s.cnt_dys_crnt_yr - 1)) end, 2), 0) as pch_cyc_crnt_yr
                  , ifnull(round(case when s.cnt_dys_cmprd_yr <= 2 then null else (s.diff_cmprd_yr / (s.cnt_dys_cmprd_yr - 1)) end, 2), 0) as pch_cyc_cmprd_yr
@@ -105,15 +110,14 @@ def excll_cust_report():
                 ) s 
         ), customer_prfl as (select a.* from excll_crnt_yr a union all select b.* from excll_cmprd_yr b)
        select s1.excll_cust_grde_mdcls_cd                                                              -- 고객등급
-
             , s1.cust_cnt_crnt_yr_f                                                                    -- 금년 대상고객수
             , s1.pch_cust_cnt_crnt_yr_f                                                                -- 금년 구매고객수
             , round(s1.pch_cust_cnt_crnt_yr_f / s1.cust_cnt_crnt_yr_f * 100, 2) as pch_rt_crnt_yr      -- 금년 구매전환율
-             
+
             , s1.cust_cnt_cmprd_yr_f                                                                   -- 전년 대상고객수	 
             , s1.pch_cust_cnt_cmprd_yr_f                                                               -- 전년 구매고객수
             , round(s1.pch_cust_cnt_cmprd_yr_f / s1.cust_cnt_cmprd_yr_f * 100, 2) as pch_rt_cmprd_yr   -- 전년 구매전환율
-             
+            
             , round(s1.pch_amt_crnt_yr_f, 2) as pch_amt_crnt_yr_f                                      -- 금년 구매금액
             , round(s1.pch_amt_cmprd_yr_f, 2) as pch_amt_cmprd_yr_f                                    -- 전년 구매금액
             
@@ -165,3 +169,17 @@ excll_cust_report()
 
 end = time.time()
 print(f"{end - start:.4f}")
+
+# Result
++------------------------+------------------+----------------------+--------------+-------------------+-----------------------+---------------+-----------------+------------------+---------------------+----------------------+-------------------+--------------------+---------------------+----------------------+
+|excll_cust_grde_mdcls_cd|cust_cnt_crnt_yr_f|pch_cust_cnt_crnt_yr_f|pch_rt_crnt_yr|cust_cnt_cmprd_yr_f|pch_cust_cnt_cmprd_yr_f|pch_rt_cmprd_yr|pch_amt_crnt_yr_f|pch_amt_cmprd_yr_f|pch_pr_action_crnt_yr|pch_pr_action_cmprd_yr|avg_pch_cyc_crnt_yr|avg_pch_cyc_cmprd_yr|avg_pch_dys_crnt_yr_f|avg_pch_dys_cmprd_yr_f|
++------------------------+------------------+----------------------+--------------+-------------------+-----------------------+---------------+-----------------+------------------+---------------------+----------------------+-------------------+--------------------+---------------------+----------------------+
+|                     AVE|               758|                   744|         98.15|                587|                    573|          97.61|     240094302300|      151235811310|            322707395|             263936843|               6.75|                9.94|                75.88|                 75.31|
+|                   MVG_A|             34855|                 34527|         99.06|              41606|                  41195|          99.01|     779078119640|      812110950020|             22564315|              19713823|               9.62|               15.36|                45.75|                 46.31|
+|                   MVG_C|             10596|                 10524|         99.32|               8409|                   8348|          99.27|     450711303810|      323867052630|             42826995|              38795765|               8.59|               11.16|                58.01|                 61.67|
+|                   MVG_L|              3223|                  3199|         99.26|               2022|                   2002|          99.01|     444602817090|      269582061130|            138981812|             134656374|               7.15|                9.43|                70.87|                 75.11|
+|                   MVG_P|              6992|                  6948|         99.37|               5118|                   5077|           99.2|     432985175520|      324215024490|             62317958|              63859567|               7.84|                 9.9|                63.01|                 69.55|
+|                     VIP|            130787|                118832|         90.86|             157349|                 147308|          93.62|     562965441180|      713660596710|              4737490|               4844683|              10.79|               23.22|                21.61|                 23.49|
+|                    VIP+|             95128|                 92202|         96.92|              84148|                  82133|          97.61|     945577868840|      732917292730|             10255502|               8923542|              10.82|               20.44|                30.86|                 32.65|
++------------------------+------------------+----------------------+--------------+-------------------+-----------------------+---------------+-----------------+------------------+---------------------+----------------------+-------------------+--------------------+---------------------+----------------------+
+
