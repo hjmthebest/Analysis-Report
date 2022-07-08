@@ -127,6 +127,8 @@ lux_cust = spark.sql("""
          , b.sex_cd
          , b.agrng_cd
          , b.cust_grde
+         , b.pch_amt
+         , b.pch_dys
     from cust_base_83502 a
     left join (select a.dpstr_cust_no
                     , a.std_dt
