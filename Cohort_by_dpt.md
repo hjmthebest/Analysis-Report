@@ -72,3 +72,5 @@ ax[1].set_ylabel(" ", fontsize=16)
 ax[1].set_title("Cohort: Retention Analysis", fontsize=20)
 plt.tight_layout()
 ```
+Result
+![다운로드](https://user-images.githubusercontent.com/67835149/177936228-1cba06ef-388d-45ea-a959-ea07c2189e86.png)
