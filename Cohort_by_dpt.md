@@ -66,7 +66,7 @@ ax[0].set_ylabel("Number of Customer", fontsize=16)
 ax[0].set_title(" ", fontsize=18)
 
 # Cohort graph
-sns.heatmap(cohort_final.iloc[6:, 1:12], annot=True, fmt='.0%', ax=ax[1], cmap='YlGnBu')
+sns.heatmap(cohort_final.iloc[6:, 1:12], annot=True, fmt='.1%', ax=ax[1], cmap='YlGnBu')
 ax[1].set_xlabel("Cohort Group", fontsize=16)
 ax[1].set_ylabel(" ", fontsize=16)
 ax[1].set_title("Cohort: Retention Analysis", fontsize=20)
