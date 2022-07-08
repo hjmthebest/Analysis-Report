@@ -1,3 +1,4 @@
+```python
 %pyspark
 
 import numpy as np
@@ -70,3 +71,4 @@ ax[1].set_xlabel("Cohort Group", fontsize=16)
 ax[1].set_ylabel(" ", fontsize=16)
 ax[1].set_title("Cohort: Retention Analysis", fontsize=20)
 plt.tight_layout()
+```
