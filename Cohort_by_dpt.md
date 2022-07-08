@@ -179,3 +179,8 @@ lux_cust.coalesce(1) \
         .mode('Overwrite') \
         .save("s3://ldps-dev.data.anl.origin/bigdata_task/jungmin.ha/lux_cust.csv")
 ```
+Total number of customer should be increased and dpstr_cust_no duplicated due to std_dt
+![image](https://user-images.githubusercontent.com/67835149/177957508-40484f6b-55d4-4e9e-abdc-de666dc3a92e.png)
+
+
+
