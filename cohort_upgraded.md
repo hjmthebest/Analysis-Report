@@ -18,7 +18,7 @@ spark = SparkSession.builder \
                     .appName("cohort_retention_analysis") \
                     .config("spark.sql.execution.arrow.enable","true") \
                     .config("spark.sql.crossJoin.enabled","true") \
-	                  .config("spark.executor.heartbeatInterval", "300s") \
+	            .config("spark.executor.heartbeatInterval", "300s") \
                     .enableHiveSupport() \
                     .getOrCreate()
                     
