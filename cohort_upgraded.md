@@ -4,6 +4,7 @@
 # import libraries
 import pyspark
 from pyspark.sql import SparkSession, Row
+from pyspark import SQLContext, SparkContext, SparkConf
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
@@ -15,8 +16,15 @@ import matplotlib.pyplot as plt
 spark = SparkSession.builder \
                     .master("yarn") \
                     .appName("cohort_retention_analysis") \
+                    .config("spark.sql.execution.arrow.enable","true") \
+                    .config("spark.sql.crossJoin.enabled","true") \
+	                  .config("spark.executor.heartbeatInterval", "300s") \
                     .enableHiveSupport() \
                     .getOrCreate()
+                    
+hadoop_config = spark.sparkContext._jsc.hadoopConfiguration()
+hadoop_config.set('fs.s3.canned.acl', 'BucketOwnerFullControl')
+sqlContext = SQLContext(spark.sparkContext)
 
 # create cohort base table using Spark SQL
 cohort = spark.sql("""
