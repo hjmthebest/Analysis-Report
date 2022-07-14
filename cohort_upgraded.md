@@ -2,10 +2,21 @@
 %pyspark
 
 # import libraries
+import pyspark
+from pyspark.sql import SparkSession, Row
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+spark = SparkSession.builder \
+                    .master("yarn") \
+                    .appName("cohort_retention_analysis") \
+                    .enableHiveSupport() \
+                    .getOrCreate()
 
 # create cohort base table using Spark SQL
 cohort = spark.sql("""
