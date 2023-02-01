@@ -84,6 +84,7 @@
   where 1 = 1
 --        and t1.dpstr_cust_no = '1234137591031'
   order by 1, 12
-  
+
+```
 # Result:
 ![image](https://user-images.githubusercontent.com/67835149/215926581-e72906c9-b9f3-48a9-acd4-1fe7680a9c37.png)
