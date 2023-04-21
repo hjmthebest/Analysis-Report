@@ -18,15 +18,15 @@
 
 start_date = '2023-01-01'
 end_date = '2023-04-20'
-selstr_cd = '0002'
+selstr_cd = '0001'
 sign = '>'
-percentage = '100'
+percentage = '90'
 ##############################################
 
 enuri = spark.sql(f"""
     with enuri_standard as (
         select a.dpstr_cust_no                                          -- 고객번호
-             , a.selstr_cd                                              -- 선정점코드(우수고객관리점과 일치?)
+             , a.selstr_cd                                              -- 선정점코드
              , a.cust_grde_cd                                           -- 고객등급
              , a.max_rdcr                                               -- 최대에누리율
              , ifnull(a.lmt_bsc_amt + a.lmt_add_amt, 0) as lmt_ttl_amt  -- 지급에누리총액(한도+추가)
@@ -34,7 +34,7 @@ enuri = spark.sql(f"""
              , ifnull(a.lmt_add_amt, 0) as lmt_add_amt                  -- 한도추가금액(추가에누리: 스타포인트를 전환하여 추가 or Upsell 프로모션 위한 추가 지급)
         from TB_DWCU_NWRDCTLMTCUST_M a                                  -- DWCU_신에누리한도고객_마스터
         where 1 = 1
-            and a.lmt_slct_yy = date_format(current_date(), '{start_date[:4]}')
+            and a.lmt_slct_yy = '{start_date[:4]}'
             and ifnull(a.lmt_bsc_amt + a.lmt_add_amt, 0) != 0
 
     ), enuri_used_log as (
