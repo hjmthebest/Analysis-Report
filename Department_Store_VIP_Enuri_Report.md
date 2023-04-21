@@ -31,7 +31,7 @@ enuri = spark.sql(f"""
              , a.max_rdcr                                               -- 최대에누리율
              , ifnull(a.lmt_bsc_amt + a.lmt_add_amt, 0) as lmt_ttl_amt  -- 지급에누리총액(한도+추가)
              , ifnull(a.lmt_bsc_amt, 0) as lmt_bsc_amt                  -- 한도기본금액(한도에누리)
-             , ifnull(a.lmt_add_amt, 0) as lmt_add_amt                  -- 한도추가금액(추가에누리: 스타포인트를 한도에누리 전환하여 기존 한도에 추가 or Upsell 프로모션 위한 추가 지급)
+             , ifnull(a.lmt_add_amt, 0) as lmt_add_amt                  -- 한도추가금액(추가에누리: 스타포인트를 전환하여 추가 or Upsell 프로모션 위한 추가 지급)
         from TB_DWCU_NWRDCTLMTCUST_M a                                  -- DWCU_신에누리한도고객_마스터
         where 1 = 1
             and a.lmt_slct_yy = date_format(current_date(), '{start_date[:4]}')
@@ -93,7 +93,7 @@ enuri = spark.sql(f"""
              , t1.max_rdcr                                              -- 최대에누리율
              , t1.lmt_ttl_amt                                           -- 지급에누리총액(한도+추가)
              , t1.lmt_bsc_amt                                           -- 한도기본금액(한도에누리)
-             , t1.lmt_add_amt                                           -- 한도추가금액(추가에누리: 스타포인트를 한도에누리로 전환하여 기존 한도에 추가 or Upsell 프로모션으로 위한 추가 지급)
+             , t1.lmt_add_amt                                           -- 한도추가금액(추가에누리: 스타포인트를 전환하여 추가 or Upsell 프로모션 위한 추가 지급)
 
              , lpad(cast(t2.pos_no as string), "4", "0") as pos_no      -- POS번호
              , lpad(cast(t2.rcpt_no as string), "4", "0") as rcpt_no    -- 영수증번호
@@ -121,8 +121,8 @@ enuri = spark.sql(f"""
              , t.lmt_add_amt
              , sum(t.rdct_lmt_amt_day) as enuri_used_amt
              , round((sum(t.rdct_lmt_amt_day) / t.lmt_ttl_amt) * 100, 1) as used_enuri_rt    -- 에누리소진율(%)
-    --         , sum(t.gs_slng_amt) as pch_amt
-    --         , sum(t.pslng_amt) as pslng_amt
+             , sum(t.gs_slng_amt) as pch_amt
+             , sum(t.pslng_amt) as pslng_amt
         from tb_base t
         where 1 = 1
             and t.trns_dt between '{start_date}' and '{end_date}'           -- 에누리 거래일자 범위 지정: (필수 지정값)
