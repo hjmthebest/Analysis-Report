@@ -132,7 +132,6 @@ enuri.createOrReplaceTempView("enuri")
 enuri.cache()
 enuri.show()
 ```
+
 Result:
 ![2023-04-24_175700](https://user-images.githubusercontent.com/67835149/233949787-f98e2424-8237-45c1-89a5-d6bf259cf1c7.png)
-
-
