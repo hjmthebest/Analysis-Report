@@ -145,5 +145,5 @@ Result
 
 
 배포 화면
-![image](https://user-images.githubusercontent.com/67835149/235052998-c19cfa6a-189b-48f4-bcdb-71d0b8b51ae7.png)
+![BI_Tool](https://user-images.githubusercontent.com/67835149/235053226-240e2cb6-4ef7-43f0-a760-6a3e4ee8b768.png)
 
