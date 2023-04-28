@@ -142,3 +142,8 @@ enuri.show()
 
 Result
 ![image](https://user-images.githubusercontent.com/67835149/234806467-bbfd9197-c34e-4503-91fb-8ace238a9597.png)
+
+
+배포 화면
+![image](https://user-images.githubusercontent.com/67835149/235052998-c19cfa6a-189b-48f4-bcdb-71d0b8b51ae7.png)
+
