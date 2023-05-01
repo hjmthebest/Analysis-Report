@@ -144,6 +144,6 @@ Result
 ![image](https://user-images.githubusercontent.com/67835149/234806467-bbfd9197-c34e-4503-91fb-8ace238a9597.png)
 
 
-배포 화면
+시스템 배포 화면
 ![BI_Tool](https://user-images.githubusercontent.com/67835149/235053226-240e2cb6-4ef7-43f0-a760-6a3e4ee8b768.png)
 
