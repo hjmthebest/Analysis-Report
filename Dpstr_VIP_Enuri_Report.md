@@ -27,6 +27,7 @@ enuri = spark.sql(f"""
         where 1 = 1
             and a.lmt_st_dt >= '{start_date[:4]}-01-01'                 -- 한도시작일자 (조회년도)
             and a.selstr_cd = '{selstr_cd}'                             -- 리포트 필터 내 여러 점포도 지정할 수 있도록 조치 필요 (DEFAULT: 전점)
+            and a.cpn_evt_no = '999999990010'                           -- 우수고객 한도/상시
 --            and a.cust_grde_cd in ('19', '21', '2A', '22', '2B', '23', '24', '5A', '51', '52')
 
     ), enuri_used_log as (
@@ -44,7 +45,7 @@ enuri = spark.sql(f"""
         from TB_DWSL_NWRDCTCPNUSE_L b                                   -- DWSL_신에누리쿠폰사용_내역
         where 1 = 1
             and b.trns_dt between '{start_date}' and '{end_date}'       -- 거래일자 범위: 설정년도 
-            and b.cpn_evt_no like '9%'                                  -- 우수고객 한도/상시
+            and b.cpn_evt_no = '999999990010'                           -- 우수고객 한도/상시
 
     ), enuri_cncl_log as (
         select c.trns_dt
@@ -61,7 +62,7 @@ enuri = spark.sql(f"""
         from TB_DWSL_NWRDCTCPNUSECANC_L c                               -- DWSL_신에누리쿠폰사용취소_내역
         where 1 = 1
             and c.trns_dt between '{start_date}' and '{end_date}'       -- 거래취소일자 범위: 설정년도 
-            and c.cpn_evt_no like '9%'                                  -- 우수고객 한도/상시
+            and c.cpn_evt_no = '999999990010'                           -- 우수고객 한도/상시
 
     ), tb_base as (
         select t1.dpstr_cust_no
