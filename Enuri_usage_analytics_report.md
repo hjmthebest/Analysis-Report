@@ -105,8 +105,8 @@ enuri = spark.sql(f"""
                  , t10.lmt_bsc_amt                             -- 한도기본금액(한도에누리)
                  , t10.lmt_add_amt                             -- 한도추가금액(추가에누리: AVENUEL POINT 전환 or 프로모션 한도 추가)
                  , ifnull(t11.rdct_lmt_amt_day, 0) as rdct_lmt_amt_day                                                                                                       -- 에누리사용금액
-                 , ifnull(round(case when ifnull(t10.lmt_ttl_amt, 0) = 0 then null else (t11.rdct_lmt_amt_day / t10.lmt_ttl_amt * 100) end, 2), 0) as enuri_usage_rt         -- 에누리소진율(%)
                  , t10.lmt_ttl_amt - ifnull(t11.rdct_lmt_amt_day, 0) as rmnd_amt                                                                                             -- 에누리잔여금액
+                 , ifnull(round(case when ifnull(t10.lmt_ttl_amt, 0) = 0 then null else (t11.rdct_lmt_amt_day / t10.lmt_ttl_amt * 100) end, 2), 0) as enuri_usage_rt         -- 에누리소진율(%)
             from enuri_standard t10
             left join enuri_used_cncl t11                      -- 관리점별 고객번호 조인
                 on t10.dpstr_cust_no = t11.dpstr_cust_no
@@ -123,7 +123,7 @@ enuri.show()
 ```
 
 1. Query Result
-![image](https://github.com/hjmthebest/SQL/assets/67835149/936aa52f-f07a-4a80-ba87-f2819027a28f)
+![image](https://github.com/hjmthebest/SQL/assets/67835149/cd06655f-84c6-4a2e-9d69-f16593ffde39)
 
 2. Result 
 ![image](https://github.com/hjmthebest/SQL/assets/67835149/be8a7045-0f20-4c01-a0ae-affc11fd45c7)
