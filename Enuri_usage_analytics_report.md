@@ -1,4 +1,4 @@
-```python
+````python
 
 import pyspark
 from pyspark.sql import SparkSession, Row
@@ -68,17 +68,15 @@ enuri = spark.sql(f"""
                 and t6.use_rsn_cd  = '00'
                 and t6.trns_dt >= date_format(current_date(), 'yyyy-01-01')
 
-    ), enuri_cstr_cd_used_cncl as (                                   -- 점/고객번호별 사용취소금액 합산
-            select t9.cstr_cd
-                 , t9.dpstr_cust_no
+    ), enuri_used_cncl as (                                           -- 점/고객번호별 사용취소금액 합산
+            select t9.dpstr_cust_no
                  , sum(t9.rdct_lmt_amt_day) as rdct_lmt_amt_day
                  , sum(t9.gs_slng_amt) as gs_slng_amt 
                  , sum(t9.rdct_obj_amt) as rdct_obj_amt 
                  , sum(t9.rdct_amt) as rdct_amt
                  , sum(t9.pslng_amt) as pslng_amt
             from (
-                select t7.cstr_cd
-                     , t7.dpstr_cust_no
+                select t7.dpstr_cust_no
                      , t7.rdct_lmt_amt_day
                      , t7.gs_slng_amt
                      , t7.rdct_obj_amt
@@ -86,8 +84,7 @@ enuri = spark.sql(f"""
                      , t7.pslng_amt
                 from enuri_used_log t7 
                 union all
-                select t8.cstr_cd
-                     , t8.dpstr_cust_no
+                select t8.dpstr_cust_no
                      , t8.rdct_lmt_amt_day
                      , t8.gs_slng_amt
                      , t8.rdct_obj_amt
@@ -95,8 +92,7 @@ enuri = spark.sql(f"""
                      , t8.pslng_amt
                from enuri_cncl_log t8
                ) t9
-            group by t9.cstr_cd
-                   , t9.dpstr_cust_no
+            group by t9.dpstr_cust_no
 
     ), enuri_data as ( 
             select t10.dpstr_cust_no
@@ -108,15 +104,12 @@ enuri = spark.sql(f"""
                  , t10.lmt_ttl_amt                             -- 지급에누리총액(한도 + 추가)
                  , t10.lmt_bsc_amt                             -- 한도기본금액(한도에누리)
                  , t10.lmt_add_amt                             -- 한도추가금액(추가에누리: AVENUEL POINT 전환 or 프로모션 한도 추가)
-                 , ifnull(t10.use_amt, 0) as rdct_lmt_amt_day  -- 에누리사용금액
-                 , ifnull(t10.rmnd_amt, 0) as rmnd_amt         -- 에누리잔여금액
-                 , ifnull(round(case when ifnull(t10.lmt_ttl_amt, 0) = 0 then null else (t10.use_amt / t10.lmt_ttl_amt * 100) end, 2), 0) as enuri_usage_rt              -- 에누리소진율(%)
-                 , ifnull(t11.rdct_lmt_amt_day, 0) as str_rdct_lmt_amt_day                                                                                               -- 관리점에누리사용금액 
-                 , ifnull(round(case when ifnull(t10.lmt_ttl_amt, 0) = 0 then null else (t11.rdct_lmt_amt_day / t10.lmt_ttl_amt * 100) end, 2), 0) as str_enuri_usage_rt -- 관리점에누리소진율(%)                   
+                 , ifnull(t11.rdct_lmt_amt_day, 0) as rdct_lmt_amt_day                                                                                                       -- 에누리사용금액
+                 , ifnull(round(case when ifnull(t10.lmt_ttl_amt, 0) = 0 then null else (t11.rdct_lmt_amt_day / t10.lmt_ttl_amt * 100) end, 2), 0) as enuri_usage_rt         -- 에누리소진율(%)
+                 , t10.lmt_ttl_amt - ifnull(t11.rdct_lmt_amt_day, 0) as rmnd_amt                                                                                             -- 에누리잔여금액
             from enuri_standard t10
-            left join enuri_cstr_cd_used_cncl t11              -- 관리점별 고객번호 조인
-                on t10.cstr_cd = t11.cstr_cd
-                and t10.dpstr_cust_no = t11.dpstr_cust_no
+            left join enuri_used_cncl t11                      -- 관리점별 고객번호 조인
+                on t10.dpstr_cust_no = t11.dpstr_cust_no
             join lpciddw.tb_dwbs_str_m t12
                 on t10.cstr_cd = t12.cstr_cd            
     )
