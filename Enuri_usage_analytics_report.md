@@ -123,10 +123,11 @@ enuri.show()
 ```
 
 1. Query Result
-![image](https://github.com/hjmthebest/SQL/assets/67835149/eec73e6d-501b-4e0e-8315-edf33ea431ac)
+![image](https://github.com/hjmthebest/SQL/assets/67835149/936aa52f-f07a-4a80-ba87-f2819027a28f)
 
 2. Result 
-![enuri_report_landing_page](https://github.com/hjmthebest/SQL/assets/67835149/02d3399a-2b6b-45d2-9156-33a902803e67)
+![image](https://github.com/hjmthebest/SQL/assets/67835149/be8a7045-0f20-4c01-a0ae-affc11fd45c7)
 
 3. Report
-![enuri_report_result](https://github.com/hjmthebest/SQL/assets/67835149/05f7cf4c-4e6a-49de-a21c-852f8fa8282d)
+![image](https://github.com/hjmthebest/SQL/assets/67835149/51901e53-8145-4839-b98c-be9086489829)
+
