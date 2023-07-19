@@ -1,11 +1,11 @@
 %pyspark
 
 ebm_dd_rto_v2 = spark.read \
-    .format('jdbc') \
-    .option("url","jdbc:redshift://0000000000000000000000000000000000000000000") \
-    .option("driver","com.amazon.redshift.jdbc42.Driver") \
-    .option("user","0000000") \
-    .option("password","0000000") \
+    .format('0000000') \
+    .option("000000000","0000000://0000000000000000000000000000000000000000000") \
+    .option("000000000000","000000000000") \
+    .option("000000000","0000000") \
+    .option("0000000000","0000000") \
     .option("query","""
 
     SELECT N2.STR_NM
